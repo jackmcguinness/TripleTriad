@@ -1,0 +1,37 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Main Scenes/Hand.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Main Scenes/GameBoard.tscn" type="PackedScene" id=2]
+
+[node name="Control" type="Control"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_right = 5000.0
+margin_bottom = 5000.0
+color = Color( 0.537255, 0.423529, 0.996078, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Hand" parent="." instance=ExtResource( 1 )]
+margin_left = 720.646
+margin_top = 88.1526
+margin_right = 1220.65
+margin_bottom = 2604.15
+
+[node name="GameBoard" parent="." instance=ExtResource( 2 )]
+margin_left = 1747.62
+margin_top = 542.138
+margin_right = 3297.62
+margin_bottom = 2092.14
+
+[node name="Hand2" parent="." instance=ExtResource( 1 )]
+margin_left = 3706.81
+margin_top = 70.5219
+margin_right = 4206.81
+margin_bottom = 2586.52

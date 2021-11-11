@@ -1,0 +1,64 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Main Scenes/CardSlot.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scripts/GameBoard.gd" type="Script" id=10]
+
+[node name="GameBoard" type="GridContainer"]
+margin_right = 1550.0
+margin_bottom = 1536.0
+columns = 3
+script = ExtResource( 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CardSlot1" parent="." instance=ExtResource( 2 )]
+
+[node name="CardSlot2" parent="." instance=ExtResource( 2 )]
+margin_left = 518.0
+margin_right = 1032.0
+
+[node name="CardSlot3" parent="." instance=ExtResource( 2 )]
+margin_left = 1036.0
+margin_right = 1550.0
+
+[node name="CardSlot4" parent="." instance=ExtResource( 2 )]
+margin_top = 518.0
+margin_bottom = 1032.0
+
+[node name="CardSlot5" parent="." instance=ExtResource( 2 )]
+margin_left = 518.0
+margin_top = 518.0
+margin_right = 1032.0
+margin_bottom = 1032.0
+
+[node name="CardSlot6" parent="." instance=ExtResource( 2 )]
+margin_left = 1036.0
+margin_top = 518.0
+margin_right = 1550.0
+margin_bottom = 1032.0
+
+[node name="CardSlot7" parent="." instance=ExtResource( 2 )]
+margin_top = 1036.0
+margin_bottom = 1550.0
+
+[node name="CardSlot8" parent="." instance=ExtResource( 2 )]
+margin_left = 518.0
+margin_top = 1036.0
+margin_right = 1032.0
+margin_bottom = 1550.0
+
+[node name="CardSlot9" parent="." instance=ExtResource( 2 )]
+margin_left = 1036.0
+margin_top = 1036.0
+margin_right = 1550.0
+margin_bottom = 1550.0
+[connection signal="mouse_entered" from="CardSlot1" to="." method="_on_CardSlot1_mouse_entered"]
+[connection signal="mouse_entered" from="CardSlot2" to="." method="_on_CardSlot2_mouse_entered"]
+[connection signal="mouse_entered" from="CardSlot3" to="." method="_on_CardSlot3_mouse_entered"]
+[connection signal="mouse_entered" from="CardSlot4" to="." method="_on_CardSlot4_mouse_entered"]
+[connection signal="mouse_entered" from="CardSlot5" to="." method="_on_CardSlot5_mouse_entered"]
+[connection signal="mouse_entered" from="CardSlot6" to="." method="_on_CardSlot6_mouse_entered"]
+[connection signal="mouse_entered" from="CardSlot7" to="." method="_on_CardSlot7_mouse_entered"]
+[connection signal="mouse_entered" from="CardSlot8" to="." method="_on_CardSlot8_mouse_entered"]
+[connection signal="mouse_entered" from="CardSlot9" to="." method="_on_CardSlot9_mouse_entered"]

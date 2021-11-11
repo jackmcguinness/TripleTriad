@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Main Scenes/CardSlot.gd" type="Script" id=1]
+[ext_resource path="res://Resources/Board/Number Spaces/1.png" type="Texture" id=2]
+
+[node name="CardSlot" type="PanelContainer"]
+margin_right = 514.0
+margin_bottom = 514.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SlotTexture" type="TextureRect" parent="."]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 507.0
+margin_bottom = 507.0
+rect_min_size = Vector2( 500, 500 )
+texture = ExtResource( 2 )
+expand = true
+
+[node name="CardTexture" type="TextureRect" parent="."]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 507.0
+margin_bottom = 507.0
+expand = true
+[connection signal="mouse_entered" from="." to="." method="_on_CardSlot_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_CardSlot_mouse_exited"]
