@@ -33,36 +33,44 @@ func _input(event):
 
 func get_drag_data(_pos): #Retrieve info about the slot we are dragging
 	
-	### Sets hand_slot number if card slot is in a hand (i.e. not in gameboard) ###
-	var hand_slot = null
-	var hand_to_remove_from = null
-	
 	if "Hand" in get_parent().name:
-		hand_slot = name.replace("CardSlot", "") 
-		hand_to_remove_from = get_parent().name
 	
-	var data = {
-		"card_id": slot_id,
-		"hand_from": hand_to_remove_from,
-		"hand_slot": hand_slot
-	}
-	
-	### Creates drag_texture for card being dragged ###
-	var drag_texture = TextureRect.new()
-	drag_texture.expand = true
-	drag_texture.texture = $CardTexture.texture
-	drag_texture.rect_size = rect_size
-	
-	### Centres drag_texture around mouse ###
-	var control = Control.new()
-	control.add_child(drag_texture)
-	drag_texture.rect_position = -0.5 * drag_texture.rect_size
-	set_drag_preview(control)
-	
-	make_card_invisible()
-	holding_card = true
-	
-	return data
+		### Sets previous_slot number if card slot is being dragged from a hand (i.e. not in gameboard) ###
+		var previous_slot = null
+		var parent_to_remove_from = null
+		
+		previous_slot = name.replace("CardSlot", "") 
+		
+		#Else will never trigger while this is in above if statement. Written in now for future features.
+		#functionally both lines of this if statement do the same thing, but the else
+		#is being kept for easily removing or editing this feature in the future.
+		if "Hand" in get_parent().name:
+			parent_to_remove_from = get_parent().name
+		else:
+			parent_to_remove_from = "GameBoard"
+		
+		var data = {
+			"card_id": slot_id,
+			"parent_from": parent_to_remove_from,
+			"previous_slot": previous_slot
+		}
+		
+		### Creates drag_texture for card being dragged ###
+		var drag_texture = TextureRect.new()
+		drag_texture.expand = true
+		drag_texture.texture = $CardTexture.texture
+		drag_texture.rect_size = rect_size
+		
+		### Centres drag_texture around mouse ###
+		var control = Control.new()
+		control.add_child(drag_texture)
+		drag_texture.rect_position = -0.5 * drag_texture.rect_size
+		set_drag_preview(control)
+		
+		make_card_invisible()
+		holding_card = true
+		
+		return data
 
 
 func can_drop_data(_pos, data): #Check if we can drop an item in this slot
@@ -85,14 +93,11 @@ func drop_data(_pos, data): #What happens when we drop an item in this slot - on
 		update_slot_texture()
 	
 	### Updates slot being dragged from with null ID and removes texture ###
-	var slot = data["hand_slot"]
-	var hand_to_remove_from = data["hand_from"]
-	
-	get_tree().call_group("cardslots", "remove_card_from_slot", slot, hand_to_remove_from)
+	get_tree().call_group("cardslots", "remove_card_from_slot", data["previous_slot"], data["parent_from"])
 
 
-func remove_card_from_slot(slot_to_remove, hand_to_remove_from):
-	if get_parent().name == hand_to_remove_from and name.replace("CardSlot","") == slot_to_remove:
+func remove_card_from_slot(slot_to_remove, parent_to_remove_from):
+	if get_parent().name == parent_to_remove_from and name.replace("CardSlot","") == slot_to_remove:
 		slot_id = null
 		update_slot_texture()
 
