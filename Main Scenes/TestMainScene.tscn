@@ -18,19 +18,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Hand" parent="." instance=ExtResource( 1 )]
-margin_left = 720.646
-margin_top = 88.1526
-margin_right = 1220.65
-margin_bottom = 2604.15
-
 [node name="GameBoard" parent="." instance=ExtResource( 2 )]
 margin_left = 1747.62
 margin_top = 542.138
 margin_right = 3297.62
 margin_bottom = 2092.14
 
-[node name="Hand2" parent="." instance=ExtResource( 1 )]
+[node name="HandA" parent="." instance=ExtResource( 1 )]
+margin_left = 720.646
+margin_top = 88.1526
+margin_right = 1220.65
+margin_bottom = 2604.15
+
+[node name="HandB" parent="." instance=ExtResource( 1 )]
 margin_left = 3706.81
 margin_top = 70.5219
 margin_right = 4206.81
