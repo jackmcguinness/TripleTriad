@@ -8,10 +8,10 @@ var focused_space = null       #int: set to number of slot being hovered over
 
 var slot_id = null             #ID of card in slot; null if empty
 
-
 func _ready():
 	
 	add_to_group("cardslots")
+	
 	
 	
 	#Assigns background texture based on slot position (uses name of Node)
@@ -35,11 +35,15 @@ func get_drag_data(_pos): #Retrieve info about the slot we are dragging
 	
 	### Sets hand_slot number if card slot is in a hand (i.e. not in gameboard) ###
 	var hand_slot = null
+	var hand_to_remove_from = null
+	
 	if "Hand" in get_parent().name:
-		hand_slot = "Slot " + name.replace("CardSlot", "") #can this be refactored to just a number? Seems silly to have 'slot' as part of the string
-		
+		hand_slot = name.replace("CardSlot", "") 
+		hand_to_remove_from = get_parent().name
+	
 	var data = {
 		"card_id": slot_id,
+		"hand_from": hand_to_remove_from,
 		"hand_slot": hand_slot
 	}
 	
@@ -73,20 +77,22 @@ func can_drop_data(_pos, data): #Check if we can drop an item in this slot
 	return false
 
 
-func drop_data(_pos, data): #What happens when we drop an item in this slot - only affects slot being dropped in
+func drop_data(_pos, data): #What happens when we drop an item in this slot - only affects slot being dropped into
 	
-	### Updates slot being dropped to with new ID and texture ###
+	### Updates slot being dragged to with new ID and texture ###
 	if focused_space == int(name.replace("CardSlot", "")):
 		slot_id = data["card_id"]
 		update_slot_texture()
 	
 	### Updates slot being dragged from with null ID and removes texture ###
-	var slot = data["hand_slot"].replace("Slot ","")
-	get_tree().call_group("cardslots","remove_card_from_slot", slot)
+	var slot = data["hand_slot"]
+	var hand_to_remove_from = data["hand_from"]
+	
+	get_tree().call_group("cardslots", "remove_card_from_slot", slot, hand_to_remove_from)
 
 
-func remove_card_from_slot(slot_to_remove):
-	if "Hand" in get_parent().name and name.replace("CardSlot", "") == slot_to_remove:
+func remove_card_from_slot(slot_to_remove, hand_to_remove_from):
+	if get_parent().name == hand_to_remove_from and name.replace("CardSlot","") == slot_to_remove:
 		slot_id = null
 		update_slot_texture()
 
