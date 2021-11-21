@@ -38,7 +38,7 @@ func get_drag_data(_pos): #Retrieve info about the slot we are dragging
 	var hand_to_remove_from = null
 	
 	if "Hand" in get_parent().name:
-		hand_slot = "Slot " + name.replace("CardSlot", "") #can this be refactored to just a number? Seems silly to have 'slot' as part of the string
+		hand_slot = name.replace("CardSlot", "") 
 		hand_to_remove_from = get_parent().name
 	
 	var data = {
@@ -85,8 +85,8 @@ func drop_data(_pos, data): #What happens when we drop an item in this slot - on
 		update_slot_texture()
 	
 	### Updates slot being dragged from with null ID and removes texture ###
-	var slot = data["hand_slot"].replace("Slot ","")
-	var hand_to_remove_from = data["hand_from"].replace("Slot", "")
+	var slot = data["hand_slot"]
+	var hand_to_remove_from = data["hand_from"]
 	
 	get_tree().call_group("cardslots", "remove_card_from_slot", slot, hand_to_remove_from)
 
