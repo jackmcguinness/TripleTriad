@@ -6,6 +6,7 @@
 [node name="CardSlot" type="PanelContainer"]
 margin_right = 514.0
 margin_bottom = 514.0
+mouse_filter = 1
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false

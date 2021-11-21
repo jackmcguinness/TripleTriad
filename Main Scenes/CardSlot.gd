@@ -1,18 +1,26 @@
 extends PanelContainer
 
-var holding_card = false
+var holding_card = false       #set to true when player is 'holding' a card 
 
-var empty_space = null
+var empty_space = null         #true when space being hovered over is empty
 
-var focused_space = null
+var focused_space = null       #int: set to number of slot being hovered over
+
+var slot_id = null             #ID of card in slot; null if empty
+
 
 func _ready():
+	
+	add_to_group("cardslots")
+	
 	
 	#Assigns background texture based on slot position (uses name of Node)
 	var slot_number = name.replace("CardSlot", "")
 	var texture_filepath = "res://Resources/Board/Number Spaces/" + slot_number + ".png"
 	$SlotTexture.texture = load(texture_filepath)
 	
+	update_slot_texture()
+
 
 func _input(event):
 	if Input.is_action_just_released("click") and holding_card == true:
@@ -21,22 +29,20 @@ func _input(event):
 			make_card_visible()
 
 
+
+
 func get_drag_data(_pos): #Retrieve info about the slot we are dragging
 	
-	var hand_slot = "Slot " + name.replace("CardSlot", "")
-	
+	### Sets hand_slot number if card slot is in a hand (i.e. not in gameboard) ###
+	var hand_slot = null
+	if "Hand" in get_parent().name:
+		hand_slot = "Slot " + name.replace("CardSlot", "") #can this be refactored to just a number? Seems silly to have 'slot' as part of the string
+		
 	var data = {
-		"card_id": get_parent().get_slot_usage()[hand_slot],
+		"card_id": slot_id,
 		"hand_slot": hand_slot
 	}
 	
-	
-	# data needed:
-		# origin parent node (e.g. is it in hand? if so is draggable)
-		# player colour - is card blue or red?
-		# any textures (background, character art, border art, number texture)
-		# number information
-
 	### Creates drag_texture for card being dragged ###
 	var drag_texture = TextureRect.new()
 	drag_texture.expand = true
@@ -57,35 +63,44 @@ func get_drag_data(_pos): #Retrieve info about the slot we are dragging
 
 func can_drop_data(_pos, data): #Check if we can drop an item in this slot
 	
-	
-	
-	#If slot being hovered over has card in it -- gameboard could keep track of this?
-		#return false
-	#else if slot is empty
-		#return true
-	
-#	var focused_space = get_parent().get_focused_space()
-	
-	var key = "Slot " + str(focused_space)
-	if get_parent().get_slot_usage()[key] == "0": 
-		empty_space = true
-		return true
-	else: 
-		empty_space = false
-		return false
-		
+	if focused_space == int(name.replace("CardSlot", "")):
+		if slot_id == null:
+			empty_space = true 
+			return true
+		else:
+			empty_space = false
+			return false
+	return false
 
 
-func drop_data(_pos, data): #What happens when we drop an item in this slot
+func drop_data(_pos, data): #What happens when we drop an item in this slot - only affects slot being dropped in
 	
-#	var focused_space_gameboard = get_parent().get_focused_space()
+	### Updates slot being dropped to with new ID and texture ###
+	if focused_space == int(name.replace("CardSlot", "")):
+		slot_id = data["card_id"]
+		update_slot_texture()
 	
-	get_parent().update_gameboard_slots(data["card_id"], focused_space)
-	
-	#Remove card ID from hand slot 
-	
-	
+	### Updates slot being dragged from with null ID and removes texture ###
+	var slot = data["hand_slot"].replace("Slot ","")
+	get_tree().call_group("cardslots","remove_card_from_slot", slot)
 
+
+func remove_card_from_slot(slot_to_remove):
+	if "Hand" in get_parent().name and name.replace("CardSlot", "") == slot_to_remove:
+		slot_id = null
+		update_slot_texture()
+
+
+func update_slot_texture():
+	if slot_id != null:
+		var key = "Slot " + name.replace("CardSlot", "")
+		var new_card_texture_filepath = "res://Resources/Cards/" + slot_id + ".jpg"
+		$CardTexture.texture = load(new_card_texture_filepath)
+	else:
+		remove_card_texture()
+
+func remove_card_texture():
+	$CardTexture.texture = null
 
 func make_card_visible():
 	$CardTexture.visible = true
@@ -95,21 +110,10 @@ func make_card_invisible():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 func _on_CardSlot_mouse_exited() -> void:
 	reset_focused_space()
 
-### CardSlot 1 ###
+### CardSlot ###
 
 func _on_CardSlot_mouse_entered() -> void:
 	focused_space = int(name.replace("CardSlot", ""))
