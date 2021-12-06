@@ -14,9 +14,9 @@ func _process(delta: float) -> void:
 		print("connected")
 
 func _ready():
-	update_hand_slots("bsquall", 3)
-	update_hand_slots("rsquall", 1)
-	update_hand_slots("bsquall", 4)
+	update_hand_slots("squallb", 3)
+	update_hand_slots("squallr", 1)
+	update_hand_slots("squallb", 4)
 	update_slot_ids()
 
 func update_hand_slots(var card_id, var slot_num):

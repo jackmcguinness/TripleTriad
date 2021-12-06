@@ -28,7 +28,10 @@ func _input(event):
 		if empty_space == false:
 			make_card_visible()
 
-
+func get_card_id():
+	print(name)
+	if slot_id != null:
+		return slot_id
 
 
 func get_drag_data(_pos): #Retrieve info about the slot we are dragging
@@ -94,6 +97,11 @@ func drop_data(_pos, data): #What happens when we drop an item in this slot - on
 	
 	### Updates slot being dragged from with null ID and removes texture ###
 	get_tree().call_group("cardslots", "remove_card_from_slot", data["previous_slot"], data["parent_from"])
+	
+	### Lets Gameboard know that a file has been dropped ###
+	if get_parent().name == "GameBoard":
+		get_tree().call_group("neighbour_comp", "compare_against_neighbours", data["card_id"], int(name.replace("CardSlot", "")))
+	
 
 
 func remove_card_from_slot(slot_to_remove, parent_to_remove_from):

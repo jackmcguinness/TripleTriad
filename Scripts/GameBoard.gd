@@ -31,9 +31,13 @@ func set_grid_sizes():
 		n.rect_min_size.y = MIN_GRID_SIZE
 
 func _ready():
+	
+	add_to_group("neighbour_comp")
+	
 	set_grid_sizes()
-	initialise_gameboard_slots("bsquall", 3)
-	initialise_gameboard_slots("rsquall", 8)
+	initialise_gameboard_slots("squallb", 3)
+	initialise_gameboard_slots("squallr", 8)
+	initialise_gameboard_slots("squallb", 1)
 	update_slot_ids()
 	
 	print_slot_usage()
@@ -69,10 +73,9 @@ func update_slot_ids():
 #                                                                              #
 # //////////////////////////////////////////////////////////////////////////// #
 
-
 func _input(event):
 	if Input.is_action_just_pressed("click") and get_focused_space() != null:
-		set_neighbours()
+		print_neighbours(set_neighbours(get_focused_space()))
 
 # //////////////////////////////////////////////////////////////////////////// #
 #                                                                              #
@@ -80,22 +83,6 @@ func _input(event):
 #                                                                              #
 # //////////////////////////////////////////////////////////////////////////// #
 
-func update_gameboard_slots(var card_id, var slot_num):
-	var key = "Slot " + str(slot_num)
-	slot_usage[key] = card_id
-	update_focused_slot_texture(card_id, slot_num)
-
-
-func update_focused_slot_texture(var card_id, var slot_num):
-	var key = "Slot " + str(slot_num)
-	
-	var node_name = "CardSlot" + str(slot_num)
-	
-	var new_card_texture_filepath = "res://Resources/Cards/" + slot_usage[key] + ".jpg"
-	
-	var card_texture_node = get_node(node_name).get_node("CardTexture")
-	
-	card_texture_node.texture = load(new_card_texture_filepath)
 
 func print_slot_usage():
 	for n in slot_usage.values().size():
@@ -116,92 +103,196 @@ func print_slot_usage():
 #                                                                              #
 # //////////////////////////////////////////////////////////////////////////// #
 
-#func get_slot_usage():
-#	return slot_usage
-
 func get_focused_space():
 	for n in get_children():
 		if n.focused_space != null:
 			return n.focused_space
 
 
-
-
 # //////////////////////////////////////////////////////////////////////////// #
 #                                                                              #
 #                                NEIGHBOUR LOGIC                               #
-#	      EVENTUALLY WILL BE USED FOR WHICH CARDS ARE COMPARED AGAINST         #
+#         EVENTUALLY WILL BE USED FOR WHICH CARDS ARE COMPARED AGAINST         #
 #                                                                              #
 # //////////////////////////////////////////////////////////////////////////// #
 
+func compare_against_neighbours(var card_id, var slot):
+	#Get dictionary of neighbours (number of neighbour slot or null)
+	var neighbours = set_neighbours(slot)
+	
+	#Get card values as a dictionary
+	var id_num = card_id.substr(0, (card_id.length() - 1 ))
+	var card_values = get_values_from_json(id_num)
+	
+	#Sets up neighbour ID (either ID# or null) and values to compare against
+	var u_neighbour_id = set_neighbour_id(neighbours, "above")
+	var r_neighbour_id = set_neighbour_id(neighbours, "right")
+	var d_neighbour_id = set_neighbour_id(neighbours, "below")
+	var l_neighbour_id = set_neighbour_id(neighbours, "left" )
+	
+	var u_neighbour_id_num = null
+	var r_neighbour_id_num = null
+	var d_neighbour_id_num = null
+	var l_neighbour_id_num = null
+	
+	var u_neighbour_d_value = null
+	var r_neighbour_l_value = null
+	var d_neighbour_u_value = null
+	var l_neighbour_r_value = null
+	
+	var u_neighbour_colour 
+	var r_neighbour_colour
+	var d_neighbour_colour
+	var l_neighbour_colour
+	
+	
+	if u_neighbour_id != null:
+		u_neighbour_id_num = u_neighbour_id.substr(0, u_neighbour_id.length() - 1)
+		u_neighbour_d_value = get_values_from_json(u_neighbour_id_num)["d"]
+		u_neighbour_colour = u_neighbour_id.substr(u_neighbour_id.length() - 1, 1)
+	if r_neighbour_id != null:
+		r_neighbour_id_num = r_neighbour_id.substr(0, r_neighbour_id.length() - 1)
+		r_neighbour_l_value = get_values_from_json(r_neighbour_id_num)["l"]
+		r_neighbour_colour = r_neighbour_id.substr(r_neighbour_id.length() - 1, 1)
+	if d_neighbour_id != null:
+		d_neighbour_id_num = d_neighbour_id.substr(0, d_neighbour_id.length() - 1)
+		d_neighbour_u_value = get_values_from_json(d_neighbour_id_num)["u"]
+		d_neighbour_colour = d_neighbour_id.substr(d_neighbour_id.length() - 1, 1)
+	if l_neighbour_id != null:
+		l_neighbour_id_num = l_neighbour_id.substr(0, l_neighbour_id.length() - 1)
+		l_neighbour_r_value = get_values_from_json(l_neighbour_id_num)["r"]
+		l_neighbour_colour = l_neighbour_id.substr(l_neighbour_id.length() - 1, 1)
+	
+	if u_neighbour_d_value != null: print("u_neighbour_d_value = " + str(u_neighbour_d_value))
+	if r_neighbour_l_value != null: print("r_neighbour_l_value = " + str(r_neighbour_l_value))
+	if d_neighbour_u_value != null: print("d_neighbour_u_value = " + str(d_neighbour_u_value))
+	if l_neighbour_r_value != null: print("l_neighbour_r_value = " + str(l_neighbour_r_value))
+	
+	#Set up placed card colour
+	var card_colour = card_id.substr(card_id.length()-1, 1)
+	print(card_colour)
+	
+	
+	
+	#STILL TO FINISH:
+	
+	#Check if neighbours are flippable
+	if neighbours["above"] != null:
+		if u_neighbour_d_value < card_values["u"] and card_colour != u_neighbour_colour:
+			#flip card above
+			pass
+	#etc etc for all 4 possible neighbours
+	
+	print(neighbours)
 
 
-func set_neighbours():
-	var x = get_focused_space()
-	var C = columns
-	var R = get_children().size() / columns 
-	var neighbours
+
+
+
+
+
+func set_neighbour_id(var neighbours, var direction):
+	if neighbours[direction] != null:
+		return get_node("CardSlot" + str(neighbours[direction])).get_card_id()
+	else:
+		return null
+
+func get_values_from_json(var id_num):
+	var value_dict = {}
+	var file = File.new()
+	file.open("res://Data/CardData.json", file.READ)
+	var text = file.get_as_text()
+	file.close()
+	var data_parse = JSON.parse(text)
+	value_dict = data_parse.result
+	
+	if id_num != null:
+		return value_dict[id_num]
+	else: 
+		return null
+
+
+func set_neighbours(var slot):
+	var x = slot                               #space being focused on
+	var C = columns                            #columns
+	var R = get_children().size() / columns    #rows
+	var neighbours = {
+		"above": null, 
+		"right": null, 
+		"below": null,
+		"left" : null
+		}
 	
 	# //////////////////////////////  CORNERS  ////////////////////////////// #
 	
 	#Top left corner (1)
 	if x == 1:  
-		neighbours = [x+1, x+C]
+		
+		neighbours["right"] = x+1
+		neighbours["below"] = x+C
 	
 	#Top right corner (3)
 	elif x == C:
-		neighbours = [x-1, x+C]
+		neighbours["below"] = x+C
+		neighbours["left"]  = x-1 
+		
 	
 	#Bottom left corner (7)
 	elif x == ((R-1)*C) + 1:
-		neighbours = [x-C, x+1]
+		neighbours["above"] = x-C
+		neighbours["right"] = x+1
 	
 	#Bottom right corner (9)
 	elif x == (R * C):
-		neighbours = [x-C, x-1]
-	
+		neighbours["above"] = x-C
+		neighbours["left"]  = x-1
 	
 	# ///////////////////////////////  EDGES  /////////////////////////////// #
 	
 	#Top middle edge CardSlots (2)
 	elif x > 1 and x < C: 
-		neighbours = [x-1, x+1, x+C]
-	
+		neighbours["right"] = x+1
+		neighbours["below"] = x+C
+		neighbours["left"] = x-1
 	
 	#Left middle edge CardSlots (4)
 	elif ((x-1) % C) == 0:
-		neighbours = [x-C, x+1, x+C]
-	
+		neighbours["above"] = x-C
+		neighbours["right"] = x+1
+		neighbours["below"] = x+C
 	
 	#Right middle edge CardSlots (6)
 	elif x % C == 0:
-		neighbours = [x-C, x-1, x+C]
+		neighbours["above"] = x-C 
+		neighbours["below"] = x+C
+		neighbours["left"]  = x-1
 	
 	#Bottom middle edge CardSlots (8)
 	elif x - ((R - 1) * C) > 1 and x - ((R - 1) * C) < C:
-		neighbours = [x-C, x-1, x+1]
-	
+		neighbours["above"] = x-C
+		neighbours["right"] = x+1
+		neighbours["left"]  = x-1 
 	
 	# ///////////////////////////////  MIDDLE  /////////////////////////////// #
 	
 	#Middle CardSlots (CardSlots not on edges)
 	else:
-		neighbours = [x-C, x-1, x+1, x+C]
+		neighbours["above"] = x-C 
+		neighbours["right"] = x+1
+		neighbours["below"] = x+C
+		neighbours["left"]  = x-1 
 	
-	print_neighbours(neighbours)
-
+	return neighbours
 
 func print_neighbours(var neighbours):
-	var neighbour_check = ("For CardSlot " + str(get_focused_space()) + ", Neighbours are: ")
+	var neighbour_print : String = ("For CardSlot " + str(get_focused_space()) + ", Neighbours are: ")
 	
-	for n in neighbours.size():
-			neighbour_check = neighbour_check + str(neighbours[n])
-			
-			if n != neighbours.size() - 1:
-				neighbour_check = neighbour_check + ", "
+	if neighbours["above"] != null: neighbour_print += "Above: " + str(neighbours["above"]) + ", "
+	if neighbours["right"] != null: neighbour_print += "Right: " + str(neighbours["right"]) + ", "
+	if neighbours["below"] != null: neighbour_print += "Below: " + str(neighbours["below"]) + ", "
+	if neighbours["left"]  != null: neighbour_print += "Left: "  + str(neighbours["left"])
 	
-	print (neighbour_check)
-
+	print (neighbour_print)
 
 func set_grid_number():
 	grid_num = name.substr(6,1)
