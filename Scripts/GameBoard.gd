@@ -125,6 +125,11 @@ func compare_against_neighbours(var card_id, var slot):
 	var card_values = get_values_from_json(id_num)
 	
 	#Sets up neighbour ID (either ID# or null) and values to compare against
+	var u_neighbour = "CardSlot" + str(neighbours["above"])
+	var r_neighbour = "CardSlot" + str(neighbours["right"])
+	var d_neighbour = "CardSlot" + str(neighbours["below"])
+	var l_neighbour = "CardSlot" + str(neighbours["left"])
+	
 	var u_neighbour_id = set_neighbour_id(neighbours, "above")
 	var r_neighbour_id = set_neighbour_id(neighbours, "right")
 	var d_neighbour_id = set_neighbour_id(neighbours, "below")
@@ -140,10 +145,10 @@ func compare_against_neighbours(var card_id, var slot):
 	var d_neighbour_u_value = null
 	var l_neighbour_r_value = null
 	
-	var u_neighbour_colour 
-	var r_neighbour_colour
-	var d_neighbour_colour
-	var l_neighbour_colour
+	var u_neighbour_colour = null
+	var r_neighbour_colour = null
+	var d_neighbour_colour = null
+	var l_neighbour_colour = null
 	
 	
 	if u_neighbour_id != null:
@@ -163,7 +168,7 @@ func compare_against_neighbours(var card_id, var slot):
 		l_neighbour_r_value = get_values_from_json(l_neighbour_id_num)["r"]
 		l_neighbour_colour = l_neighbour_id.substr(l_neighbour_id.length() - 1, 1)
 	
-	if u_neighbour_d_value != null: print("u_neighbour_d_value = " + str(u_neighbour_d_value))
+	if u_neighbour_d_value != null: print("u_neighbour_d_value = " + str(u_neighbour_d_value) + ". Colour = " + u_neighbour_colour)
 	if r_neighbour_l_value != null: print("r_neighbour_l_value = " + str(r_neighbour_l_value))
 	if d_neighbour_u_value != null: print("d_neighbour_u_value = " + str(d_neighbour_u_value))
 	if l_neighbour_r_value != null: print("l_neighbour_r_value = " + str(l_neighbour_r_value))
@@ -177,10 +182,25 @@ func compare_against_neighbours(var card_id, var slot):
 	#STILL TO FINISH:
 	
 	#Check if neighbours are flippable
-	if neighbours["above"] != null:
+	
+#	This currently activates for ALL neighbours, leading to null error when no card is in neighbouring slot
+#	Need to check if slot is empty and use in below ifs
+	
+	
+	
+	if neighbours["above"] != null and u_neighbour_id != null:
 		if u_neighbour_d_value < card_values["u"] and card_colour != u_neighbour_colour:
-			#flip card above
-			pass
+			u_neighbour_colour = get_node(u_neighbour).change_colour(u_neighbour_colour, card_colour)
+	if neighbours["right"] != null and r_neighbour_id != null:
+		if r_neighbour_l_value < card_values["r"] and card_colour != r_neighbour_colour:
+			r_neighbour_colour = get_node(r_neighbour).change_colour(r_neighbour_colour, card_colour)
+	if neighbours["below"] != null and d_neighbour_id != null:
+		if d_neighbour_u_value < card_values["d"] and card_colour != d_neighbour_colour:
+			d_neighbour_colour = get_node(d_neighbour).change_colour(d_neighbour_colour, card_colour)
+	if neighbours["left"]  != null and l_neighbour_id != null:
+		if l_neighbour_r_value < card_values["l"] and card_colour != l_neighbour_colour:
+			l_neighbour_colour = get_node(l_neighbour).change_colour(l_neighbour_colour, card_colour)
+	
 	#etc etc for all 4 possible neighbours
 	
 	print(neighbours)

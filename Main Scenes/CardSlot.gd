@@ -28,10 +28,6 @@ func _input(event):
 		if empty_space == false:
 			make_card_visible()
 
-func get_card_id():
-	print(name)
-	if slot_id != null:
-		return slot_id
 
 
 func get_drag_data(_pos): #Retrieve info about the slot we are dragging
@@ -129,6 +125,7 @@ func make_card_invisible():
 
 
 
+
 func _on_CardSlot_mouse_exited() -> void:
 	reset_focused_space()
 
@@ -139,3 +136,16 @@ func _on_CardSlot_mouse_entered() -> void:
 
 func reset_focused_space():
 	focused_space = null
+
+### External calls ###
+
+func get_card_id():
+	print(name)
+	if slot_id != null:
+		return slot_id
+
+func change_colour(var colour_to_change, var new_colour):
+	var new_slot_id_colour = slot_id.substr(0, slot_id.length() - 1) + new_colour
+	slot_id = new_slot_id_colour
+	update_slot_texture()
+	
