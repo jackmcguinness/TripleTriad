@@ -12,8 +12,7 @@ func _ready():
 	
 	add_to_group("cardslots")
 	
-	
-	
+		
 	#Assigns background texture based on slot position (uses name of Node)
 	var slot_number = name.replace("CardSlot", "")
 	var texture_filepath = "res://Resources/Board/Number Spaces/" + slot_number + ".png"
@@ -123,9 +122,6 @@ func make_card_visible():
 func make_card_invisible():
 	$CardTexture.visible = false
 
-
-
-
 func _on_CardSlot_mouse_exited() -> void:
 	reset_focused_space()
 
@@ -145,6 +141,14 @@ func get_card_id():
 		return slot_id
 
 func change_colour(var colour_to_change, var new_colour):
+	
+	#Plays animation and waits until card is 0 width (i.e. when card is halfway through being flipped)
+	var animation_length = $AnimationPlayer.get_animation("card_flip").length
+	
+	$AnimationPlayer.play("card_flip")
+	yield(get_tree().create_timer(animation_length/2), "timeout")
+	
+	#Sets new ID and changes card texture
 	var new_slot_id_colour = slot_id.substr(0, slot_id.length() - 1) + new_colour
 	slot_id = new_slot_id_colour
 	update_slot_texture()
