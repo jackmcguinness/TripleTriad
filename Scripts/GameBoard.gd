@@ -224,7 +224,7 @@ func get_values_from_json(var id_num):
 	var text = file.get_as_text()
 	file.close()
 	var data_parse = JSON.parse(text)
-	value_dict = data_parse.result
+	value_dict = data_parse.result 
 	
 	if id_num != null:
 		return value_dict[id_num]
