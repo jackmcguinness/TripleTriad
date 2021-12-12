@@ -14,14 +14,25 @@ func _process(delta: float) -> void:
 		print("connected")
 
 func _ready():
-	update_hand_slots("edeab", 1)
-	update_hand_slots("edear", 2)
-	update_hand_slots("irvineb", 3)
-	update_hand_slots("irviner", 4)
-	update_hand_slots("squallb", 5)
+	update_hand_slots("edea", 1)
+	update_hand_slots("edea", 2)
+	update_hand_slots("irvine", 3)
+	update_hand_slots("irvine", 4)
+	update_hand_slots("squall", 5)
 	update_slot_ids()
 
-func update_hand_slots(var card_id, var slot_num):
+func update_hand_slots(var card_name, var slot_num):
+	
+	
+	#Sets card_id for each card based on colour (adds b or r to name)
+	var card_id = null
+	
+	if name == "HandBlue":
+		card_id = card_name + "b"
+	elif name == "HandRed":
+		card_id = card_name + "r"
+	
+	#Sets card_id to slot_usage dictionary field and updates textures
 	var key = "Slot " + str(slot_num)
 	slot_usage[key] = card_id
 	update_slot_textures()
