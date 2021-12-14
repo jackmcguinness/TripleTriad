@@ -35,9 +35,9 @@ func _ready():
 	add_to_group("neighbour_comp")
 	
 	set_grid_sizes()
-	initialise_gameboard_slots("squallb", 3)
-	initialise_gameboard_slots("squallr", 8)
-	initialise_gameboard_slots("squallb", 1)
+#	initialise_gameboard_slots("squallb", 3)
+#	initialise_gameboard_slots("squallr", 8)
+#	initialise_gameboard_slots("squallb", 1)
 	update_slot_ids()
 	
 	print_slot_usage()
@@ -218,16 +218,16 @@ func set_neighbour_id(var neighbours, var direction):
 		return null
 
 func get_values_from_json(var id_num):
-	var value_dict = {}
+	var card_dict = {}
 	var file = File.new()
 	file.open("res://Data/CardData.json", file.READ)
 	var text = file.get_as_text()
 	file.close()
 	var data_parse = JSON.parse(text)
-	value_dict = data_parse.result 
+	card_dict = data_parse.result 
 	
 	if id_num != null:
-		return value_dict[id_num]
+		return card_dict[id_num]
 	else: 
 		return null
 

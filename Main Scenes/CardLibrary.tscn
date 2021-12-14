@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/CardLibrary.gd" type="Script" id=1]
+
+[node name="CardLibrary" type="GridContainer"]
+margin_left = 974.746
+margin_top = 1325.96
+margin_right = 4074.75
+margin_bottom = 2425.96
+columns = 6
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
