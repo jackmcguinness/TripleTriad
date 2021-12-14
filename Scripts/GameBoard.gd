@@ -35,9 +35,9 @@ func _ready():
 	add_to_group("neighbour_comp")
 	
 	set_grid_sizes()
-	initialise_gameboard_slots("squallb", 3)
-	initialise_gameboard_slots("squallr", 8)
-	initialise_gameboard_slots("squallb", 1)
+#	initialise_gameboard_slots("squallb", 3)
+#	initialise_gameboard_slots("squallr", 8)
+#	initialise_gameboard_slots("squallb", 1)
 	update_slot_ids()
 	
 	print_slot_usage()

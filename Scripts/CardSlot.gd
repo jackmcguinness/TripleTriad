@@ -31,7 +31,8 @@ func _input(event):
 
 func get_drag_data(_pos): #Retrieve info about the slot we are dragging
 	
-	if get_parent().name != "Gameboard":
+	#Cannot drag if slot is in GameBoard
+	if get_parent().name != "GameBoard":
 	
 		### Sets previous_slot number if card slot is being dragged from a hand (i.e. not in gameboard) ###
 		var previous_slot = name.replace("CardSlot", "") 
@@ -83,10 +84,12 @@ func drop_data(_pos, data): #What happens when we drop an item in this slot - on
 	### Updates slot being dragged from with null ID and removes texture ###
 	get_tree().call_group("cardslots", "remove_card_from_slot", data["previous_slot"], data["parent_from"])
 	
-	### Lets Gameboard know that a file has been dropped ###
+	### Lets Gameboard know that a card has been dropped ###
 	if get_parent().name == "GameBoard":
 		get_tree().call_group("neighbour_comp", "compare_against_neighbours", data["card_id"], int(name.replace("CardSlot", "")))
 	
+	### Lets SelectableHand know that a card has been dropped ###
+	get_tree().call_group("hand_selection", "check_if_hand_full")
 
 
 func remove_card_from_slot(slot_to_remove, parent_to_remove_from):

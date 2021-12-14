@@ -1,7 +1,13 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Main Scenes/CardLibrary.tscn" type="PackedScene" id=1]
-[ext_resource path="res://SelectableHand.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Main Scenes/SelectableHand.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Resources/Fonts/BebasNeue-Regular.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Scripts/StartGameButton.gd" type="Script" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+size = 120
+font_data = ExtResource( 3 )
 
 [node name="HandSelectionScreen" type="Control"]
 anchor_right = 1.0
@@ -22,3 +28,16 @@ margin_left = 1237.91
 margin_top = 497.905
 margin_right = 3823.91
 margin_bottom = 1011.91
+
+[node name="StartGameButton" type="Button" parent="."]
+margin_left = 2290.38
+margin_top = 76.1591
+margin_right = 2790.38
+margin_bottom = 376.159
+custom_fonts/font = SubResource( 1 )
+text = "Start Game"
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="StartGameButton" to="SelectableHand" method="_on_StartGameButton_pressed"]
